@@ -8,6 +8,7 @@ const { initializeDbConnection } = require('./dbConnect/db.connection');
 const { errorHandler } = require('./middlewares/errorHandler');
 const { routeHandler } = require('./middlewares/routeHandler');
 const userRouter = require("./routes/user-router")
+const allPostsRouter = require("./routes/posts-router")
 
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -19,6 +20,7 @@ app.get("/",(req,res)=>{
     res.json("Welcome to DevConnect Server !!")
 })
 app.use("/user",userRouter)
+app.use("/posts",allPostsRouter)
 app.use(errorHandler)
 app.use(routeHandler)
 
