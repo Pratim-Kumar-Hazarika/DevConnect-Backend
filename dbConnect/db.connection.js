@@ -3,7 +3,7 @@ const uri = process.env.MONGODB_URI
 
 async function  initializeDbConnection(){
     try {
-        const connection =  await mongoose.connect(uri,{useNewUrlParser: true})
+        const connection =  await mongoose.connect(uri,{useNewUrlParser: true, useUnifiedTopology: true})
         if(connection){
             console.log("Successfully connected to database")
         }
