@@ -3,6 +3,7 @@ const UserController = require("../controllers/user.controller")
 const UserFollowingController = require("../controllers/user.following.unfollowing")
 const UserPostController = require("../controllers/user.post")
 const UserPostCommentController = require("../controllers/user.post.comments")
+const UserPostLikeUnlikeController = require("../controllers/user.post.likes")
 const router = express.Router()
 
 const {userLogger} = require("../middlewares/authHandler")
@@ -37,6 +38,12 @@ router.route("/post/comment")
 
 router.route("/post/comment/delete")
 .post(UserPostCommentController.delete_comment);
+
+router.route("/post/like")
+.post(UserPostLikeUnlikeController.add_like)
+
+router.route("/post/unlike")
+.post(UserPostLikeUnlikeController.unlike)
 
 module.exports = router
 
