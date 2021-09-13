@@ -1,6 +1,7 @@
 const express = require("express");
 const UserController = require("../controllers/user.controller")
 const UserFollowingController = require("../controllers/user.following.unfollowing")
+const UserPostController = require("../controllers/user.post")
 const router = express.Router()
 
 const {userLogger} = require("../middlewares/authHandler")
@@ -22,6 +23,13 @@ router.route("/following")
 
 router.route("/unfollow")
 .post(UserFollowingController.remove_following_and_follower)
+
+router.route("/post")
+.get(UserPostController.user_posts)
+.post(UserPostController.create_post)
+
+router.route("/post/delete")
+.post(UserPostController.delete_post)
 
 module.exports = router
 
