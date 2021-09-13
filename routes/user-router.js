@@ -2,6 +2,7 @@ const express = require("express");
 const UserController = require("../controllers/user.controller")
 const UserFollowingController = require("../controllers/user.following.unfollowing")
 const UserPostController = require("../controllers/user.post")
+const UserPostCommentController = require("../controllers/user.post.comments")
 const router = express.Router()
 
 const {userLogger} = require("../middlewares/authHandler")
@@ -30,6 +31,12 @@ router.route("/post")
 
 router.route("/post/delete")
 .post(UserPostController.delete_post)
+
+router.route("/post/comment")
+.post(UserPostCommentController.add_comment);
+
+router.route("/post/comment/delete")
+.post(UserPostCommentController.delete_comment);
 
 module.exports = router
 
