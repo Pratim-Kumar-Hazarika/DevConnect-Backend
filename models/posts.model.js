@@ -7,8 +7,12 @@ const postSchema = new Schema({
     image :String,
     comments :[{
         text :String,
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User"
+        commentorName:String,
+        _id:{
+            type :mongoose.Schema.Types.ObjectId,
+            ref :"User",
+            required:true
+          },
     }],
     likes :[
         {
