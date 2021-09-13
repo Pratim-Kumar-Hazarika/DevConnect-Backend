@@ -3,9 +3,11 @@ const express = require('express')
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require("cors");
-const { initializeDbConnection } = require('./dbConnect/db.connection');
 const port = process.env.PORT || 3003
-
+const { initializeDbConnection } = require('./dbConnect/db.connection');
+const { errorHandler } = require('./middlewares/errorHandler');
+const { routeHandler } = require('./middlewares/routeHandler');
+const userRouter = require("./routes/user-router")
 
 app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -16,6 +18,9 @@ initializeDbConnection()
 app.get("/",(req,res)=>{
     res.json("Welcome to DevConnect Server !!")
 })
+app.use("/user",userRouter)
+app.use(errorHandler)
+app.use(routeHandler)
 
 app.listen(process.env.PORT || port ,()=>{
     console.log(`Server started at port ${port}!!`)
