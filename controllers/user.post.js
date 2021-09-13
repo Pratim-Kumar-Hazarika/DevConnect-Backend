@@ -3,7 +3,7 @@ const { UserPost } = require("../models/posts.model");
 exports.user_posts = async(req,res)=>{ 
     try{
         const {decodedValues} = req.user;
-        const userPosts = await UserPost.findById(decodedValues.userId)
+        const userPosts = await UserPost.findById(decodedValues.userId).populate("posts.comments._id posts.likes")
         res.json({message:"User posts are..",userPosts})
     }catch{
       res.status(500).json({message:"Error occured while getting the user posts!!"})
