@@ -1,17 +1,44 @@
 const {UserFollower} = require("../models/follower.model");
 const { UserFollowing} = require("../models/following.model");
 
-exports.get_all_followers = async (req, res) => {
+exports.get_all_followings= async (req, res) => {
     try {
         const {decodedValues} = req.user;
         const userFollowings = await UserFollowing.findById(decodedValues.userId).populate("following")
+        const followings = userFollowings.following.map((person)=>({
+                _id :person._id,
+                name :person.name,
+                username:person.username,
+                profilePicture :person.profilePicture
+        }))
         res.json({
             message: "User Followings are..",
-            userFollowings
+            followings 
         })
     } catch (error) {
         res.status(500).json({
             message: "Error occured while getting the user followings"
+        })
+    }
+}
+
+exports.get_all_followers= async (req, res) => {
+    try {
+        const {decodedValues} = req.user;
+        const userFollowers = await UserFollower.findById(decodedValues.userId).populate("followers")
+        const followers = userFollowers.followers.map((person)=>({
+                _id :person._id,
+                name :person.name,
+                username:person.username,
+                profilePicture :person.profilePicture
+        }))
+        res.json({
+            message: "User Followers are..",
+            followers 
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: "Error occured while getting the user followers"
         })
     }
 }
