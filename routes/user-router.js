@@ -4,6 +4,7 @@ const UserFollowingController = require("../controllers/user.following.unfollowi
 const UserPostController = require("../controllers/user.post")
 const UserPostCommentController = require("../controllers/user.post.comments")
 const UserPostLikeUnlikeController = require("../controllers/user.post.likes")
+const UserDetailsController = require("../controllers/user.details")
 const router = express.Router()
 
 const {userLogger} = require("../middlewares/authHandler")
@@ -20,8 +21,14 @@ router.route("/login")
 router.use(userLogger)
 
 router.route("/following")
-.get(UserFollowingController.get_all_followers)
+.get(UserFollowingController.get_all_followings)
 .post(UserFollowingController.add_following_and_follower)
+
+
+router.route("/followers")
+.get(UserFollowingController.get_all_followers)
+
+
 
 router.route("/unfollow")
 .post(UserFollowingController.remove_following_and_follower)
@@ -44,6 +51,10 @@ router.route("/post/like")
 
 router.route("/post/unlike")
 .post(UserPostLikeUnlikeController.unlike)
+
+router.route("/details")
+.get(UserDetailsController.sendDetails)
+.post(UserDetailsController.updateDetails)
 
 module.exports = router
 
