@@ -5,6 +5,7 @@ const postSchema = new Schema({
     _id :{type: mongoose.Schema.Types.ObjectId, auto: true },
     caption :String,
     image :String,
+    flag:String,
     comments :[{
         text :String,
         commentorName:String,
@@ -20,7 +21,9 @@ const postSchema = new Schema({
         ref:"User"
         }
     ]
-})
+},{
+  timestamps : true
+  })
 
 const userPostSchema = new Schema({
     _id:{
