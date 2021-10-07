@@ -6,7 +6,16 @@ const mySecret = process.env.MY_SECRET_KEY
 exports.get_all_users = async(req,res)=>{
     try {
         const users = await User.find({})
-        res.json({sucess:true,message:"Users from db are..",users})
+        const allUsers = users.map((person)=>({
+          _id :person._id,
+          name :person.name,
+          username:person.username,
+          profilePicture :person.profilePicture,
+          website:person.website,
+          profileBio :person.profileBio,
+          gender :person.gender
+  }))
+        res.json({sucess:true,message:"All users are ..",allUsers})
     } catch (error) {
         res.json({message:"error occured while getting the users"})
     }
@@ -15,6 +24,7 @@ exports.get_all_users = async(req,res)=>{
 exports.add_user = async(req,res)=>{
     try{
       const findUser = await User.find({email:req.body.email})
+
       if(findUser.length >=1){
         return res.status(500).json({message:"Email-ID already exists in the DB!!"})
       }
@@ -22,7 +32,7 @@ exports.add_user = async(req,res)=>{
       const NewUser = new User({
         ...req.body,password:passwordHashed
       })
-      const savedUser = await NewUser.save()
+      await NewUser.save()
       res.json({message:"User saved to DB!!"})
     }catch{
       res.status(500).json({message:"Error occured while adding the user to DB!!"})
