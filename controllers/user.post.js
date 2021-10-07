@@ -1,5 +1,5 @@
 const { UserPost } = require("../models/posts.model");
-
+const {cloudinary} = require("../cloudinary/cloudinary")
 exports.user_posts = async(req,res)=>{ 
     try{
         const {decodedValues} = req.user;
@@ -14,18 +14,29 @@ exports.user_posts = async(req,res)=>{
       try {
         const {decodedValues} = req.user;
         const userPosts = await UserPost.findById(decodedValues.userId)
-        if(userPosts === null){
-            const NewPost = new UserPost({
-                _id : decodedValues.userId,
-                posts:[req.body]
-            })
-            await NewPost.save()
+        if(userPosts=== null){
+          const NewPost = new UserPost({
+            _id : decodedValues.userId,
+            posts:[]
+        })
+        await NewPost.save()
+        }
+        if(req.body.imageUrl === "no-image"){
+          await UserPost.updateOne({"_id":decodedValues.userId},{
+            "$addToSet":{
+                "posts":req.body
+            }
+        })
         }else{
-            await UserPost.updateOne({"_id":decodedValues.userId},{
-                "$addToSet":{
-                    "posts":req.body
-                }
+          const image = req.body.imageUrl;
+          const uplodedResponse = await cloudinary.uploader.upload(image,{
+            upload_preset:"dev_setups"
             })
+          await UserPost.updateOne({"_id":decodedValues.userId},{
+            "$addToSet":{
+                "posts":{...req.body,"image":uplodedResponse.secure_url,"flag":"image-exists"}
+            }
+        })
         }
         res.json({message:"Creation of post is successfull !!!"})
 
@@ -37,6 +48,7 @@ exports.user_posts = async(req,res)=>{
   exports.delete_post = async(req,res)=>{ // Delete a Post
     try{
         const {decodedValues} = req.user;
+        console.log(req.body.postId)
       await UserPost.updateOne({"_id":decodedValues.userId},{
         "$pull":{
           "posts":{
