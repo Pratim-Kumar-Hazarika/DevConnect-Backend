@@ -2,9 +2,7 @@ const { UserPost } = require("../models/posts.model");
 
 exports.add_like = async(req,res)=>{
     try {
-        const {decodedValues} = req.user;
-        const {postId} = req.body;
-        await UserPost.updateOne({"_id":decodedValues.userId,"posts._id":postId},{
+        await UserPost.updateOne({"_id":req.body.postBelongingToUserId,"posts._id":req.body.postId},{
             "$addToSet":{
                 "posts.$.likes":req.body.userWhoLikedId
             }
@@ -17,11 +15,9 @@ exports.add_like = async(req,res)=>{
 
 exports.unlike = async(req,res)=>{
     try{
-        const {decodedValues} = req.user;
-        const {postId} = req.body;
-          await UserPost.updateOne({"_id":decodedValues.userId,"posts._id":postId},{
+          await UserPost.updateOne({"_id":req.body.postBelongingToUserId,"posts._id":req.body.postId},{
            "$pull":{
-               "posts.$.likes":  req.body.userWhoLikedId
+               "posts.$.likes":  req.body.userWhoUnLikedId
            }
          })
            res.json({message:"Unlike sucessfull..."})
