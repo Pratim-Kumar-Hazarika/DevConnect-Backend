@@ -7,13 +7,22 @@ const postSchema = new Schema({
     image :String,
     flag:String,
     comments :[{
-        text :String,
-        commentorName:String,
+        parrentComment :String,
         _id:{
             type :mongoose.Schema.Types.ObjectId,
             ref :"User",
             required:true
           },
+        childrenComments:[
+            {
+              comment:String,
+              _id:{
+                type :mongoose.Schema.Types.ObjectId,
+                ref :"User",
+                required:true
+              },
+            }
+        ]
     }],
     likes :[
         {
