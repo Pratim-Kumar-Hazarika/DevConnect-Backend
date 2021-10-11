@@ -3,8 +3,16 @@ const {cloudinary} = require("../cloudinary/cloudinary")
 exports.user_posts = async(req,res)=>{ 
     try{
         const {decodedValues} = req.user;
-        const userPosts = await UserPost.findById(decodedValues.userId).populate("posts.comments._id posts.likes")
-        res.json({message:"User posts are..",userPosts})
+        const userPosts = await UserPost.findById(decodedValues.userId).populate("posts.comments._id posts.likes _id")
+        const userDetails = {
+          userId:userPosts._id._id,
+          userName:userPosts._id.username,
+          userProfilePic:userPosts._id.profilePicture 
+        }
+        const posts = userPosts.posts.map((post)=>(
+             {post,...userDetails}
+        ))
+        res.json({message:"User posts are..",posts})
     }catch{
       res.status(500).json({message:"Error occured while getting the user posts!!"})
     }
